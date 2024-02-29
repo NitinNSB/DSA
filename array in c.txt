@@ -1,0 +1,6 @@
+arr[]= *(arr + (index * sizeof(element_type) ) )
+
+
+arr[][] = *((arr + row_index * number_of_columns) + column_index)
+
+
