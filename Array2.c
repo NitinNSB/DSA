@@ -31,6 +31,7 @@ void deleteElementAtIndex(struct DynArray* Arr,int index);
 
 void main(){
     struct DynArray * Array;
+    Array=NULL;
     Array=createArray(2);
     appendElement(Array,5);
     appendElement(Array,7);
