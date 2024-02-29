@@ -5,6 +5,62 @@ struct DynArray{
     int lastIndex;
     int* ptr;
 };
+struct DynArray* createArray(int size);
+
+void doubleArray(struct DynArray* Arr);
+
+void halfArray(struct DynArray* Arr);
+
+void appendElement(struct DynArray* Arr,int val);
+
+void insertElementAtIndex(struct DynArray* Arr,int index,int value);
+
+int getValueAtIndex(struct DynArray* Arr,int index);
+
+void editValueAtIndex(struct DynArray* Arr,int index,int value);
+
+int countElement(struct DynArray* Arr);
+
+void checkEmpty(struct DynArray* Arr);
+
+void checkFull(struct DynArray* Arr);
+
+void releaseMemory(struct DynArray* Arr);
+
+void deleteElementAtIndex(struct DynArray* Arr,int index);
+
+void main(){
+    struct DynArray * Array;
+    Array=createArray(2);
+    appendElement(Array,5);
+    appendElement(Array,7);
+    printf("\n%d\n",getValueAtIndex(Array,0));
+    printf("%d\n",getValueAtIndex(Array,1));
+    printf("capacity = %d\n",Array->capacity);
+    appendElement(Array,8);
+    printf("%d\n",getValueAtIndex(Array,2));
+    printf("capacity = %d\n",Array->capacity);
+    deleteElementAtIndex(Array,0);
+    printf("capacity = %d\n",Array->capacity);
+    printf("%d\n",getValueAtIndex(Array,0));
+    printf("%d\n",getValueAtIndex(Array,1));
+    printf("%d\n",getValueAtIndex(Array,2));
+    deleteElementAtIndex(Array,0);
+    printf("capacity = %d\n",Array->capacity);
+    printf("%d\n",getValueAtIndex(Array,0));
+    printf("%d\n",getValueAtIndex(Array,1));
+    printf("%d\n",getValueAtIndex(Array,2));
+    deleteElementAtIndex(Array,0);
+    printf("capacity = %d\n",Array->capacity);
+    printf("%d\n",getValueAtIndex(Array,0));
+    appendElement(Array,8);
+    printf("capacity = %d\n",Array->capacity);
+    printf("%d\n",getValueAtIndex(Array,0));
+    appendElement(Array,9);
+    printf("capacity = %d\n",Array->capacity);
+    printf("%d\n",getValueAtIndex(Array,1));
+}
+
 
 // Function to Create Array variable dynamically and initilize member variable.
 struct DynArray* createArray(int size){
@@ -16,6 +72,31 @@ struct DynArray* createArray(int size){
     printf("Array crerated Successfully...");
     return Arr;
 }
+// method doubleArray() to increase the size of array by  double of its size.
+
+void doubleArray(struct DynArray* Arr){
+    int* temp;
+    temp=(int*)malloc(sizeof(int)*Arr->capacity*2);
+    Arr->capacity=Arr->capacity*2;
+    for(int i=0;i<=Arr->lastIndex;i++){
+      temp[i]=Arr->ptr[i];
+    }
+    free(Arr->ptr);
+    Arr->ptr=temp;
+}
+
+//method halfArray() to decrease the size of array by half
+ 
+ void halfArray(struct DynArray* Arr){
+    int* temp;
+    temp=(int*)malloc(sizeof(int)*(Arr->capacity/2));
+    Arr->capacity=Arr->capacity/2;
+    for(int i=0;i<=Arr->lastIndex;i++){
+      temp[i]=Arr->ptr[i];
+    }
+    free(Arr->ptr);
+    Arr->ptr=temp;
+}
 
 //append value in an array.
 
@@ -23,10 +104,10 @@ void appendElement(struct DynArray* Arr,int val){
     if(Arr==NULL){
         printf("Array is not created Yet\n");
     }
-    else if(Arr->lastIndex==Arr->capacity-1){
-        printf("Sorry,array is full.Try to expend it. \n");
-    }
-    else{
+    else{ 
+        if(Arr->lastIndex==Arr->capacity-1){
+            doubleArray(Arr);
+        }
         Arr->lastIndex++;
         Arr->ptr[Arr->lastIndex]=val;
     }
@@ -39,22 +120,24 @@ void insertElementAtIndex(struct DynArray* Arr,int index,int value){
     if(Arr==NULL){
         printf("Array is not created Yet\n");
     }
-    else if(Arr->lastIndex==Arr->capacity-1){
-        printf("Sorry,array is full.Try to expend it. \n");
-    }
-    else if(index<0||index>Arr->capacity-1||index>Arr->lastIndex+1){
+    else if(index<0||index>Arr->lastIndex+1){
         printf("Invalid index.\n");
     }
-    else if(index==Arr->lastIndex+1){
-        Arr->ptr[index]=value;
-        Arr->lastIndex++;
-    }
-    else{
-        for(int i=Arr->lastIndex;i>=index;i--){
-            Arr->ptr[i+1]=Arr->ptr[i];
+    else {
+        if(Arr->lastIndex==Arr->capacity-1){
+            doubleArray(Arr);
         }
-        Arr->ptr[index]=value;
-        Arr->lastIndex++;
+        if(index==Arr->lastIndex+1){
+            Arr->ptr[index]=value;
+            Arr->lastIndex++;
+        }
+        else{
+            for(int i=Arr->lastIndex;i>=index;i--){
+                Arr->ptr[i+1]=Arr->ptr[i];
+            }
+            Arr->ptr[index]=value;
+            Arr->lastIndex++;
+        }
     }
 }
 
@@ -62,13 +145,16 @@ void insertElementAtIndex(struct DynArray* Arr,int index,int value){
 
 int getValueAtIndex(struct DynArray* Arr,int index){
     if(Arr==NULL){
-        printf("Array is not created Yet\n");
+        printf("Array is not created Yet. ");
+        return -1;
     }
     else if(index<0||index>Arr->capacity-1){
-        printf("Invalid index.\n");
+        printf("Invalid index. ");
+        return -1;
     }
     else if(index>Arr->lastIndex){
-        printf("These index Are not Filled Yet./n");
+        printf("These index Are not Filled Yet. ");
+        return -1;
     }
     else{
         return Arr->ptr[index];
@@ -81,10 +167,7 @@ void editValueAtIndex(struct DynArray* Arr,int index,int value){
     if(Arr==NULL){
         printf("Array is not created Yet\n");
     }
-    else if(Arr->lastIndex==Arr->capacity-1){
-        printf("Sorry,array is full.Try to expend it. \n");
-    }
-    else if(index<0||index>Arr->capacity-1||index>Arr->lastIndex){
+    else if(index<0||index>Arr->lastIndex){
         printf("Invalid index.\n");
     }
     else{
@@ -96,7 +179,8 @@ void editValueAtIndex(struct DynArray* Arr,int index,int value){
 
 int countElement(struct DynArray* Arr){
     if(Arr==NULL){
-        printf("Array is not created Yet\n");
+        printf("Array is not created Yet ");
+        return -1;
     }
     else
         return Arr->lastIndex+1;
@@ -140,67 +224,27 @@ void releaseMemory(struct DynArray* Arr){
     }
 }
 
-//delete Element of Array
-
-void deleteElement(struct DynArray* Arr,int index){
-    if(Arr==NULL){
-        printf("Array is not created Yet\n");
-    }
-    else if(index<0||index>Arr->capacity-1||index>Arr->lastIndex){
-        printf("Invalid index.\n");
-    }
-}
-
 //define a function to delete an element of array.
 
 void deleteElementAtIndex(struct DynArray* Arr,int index){
         if(Arr==NULL){
         printf("Array is not created Yet\n");
     }
-    else if(index<0||index>Arr->capacity-1||index>Arr->lastIndex){
-        printf("Invalid index.\n");
-    }
-    else if(index==Arr->lastIndex){
-        Arr->lastIndex--;
+    else if(index<0||index>Arr->lastIndex){
+        printf("Invalid Index\n");
     }
     else{
-        for(int i=index;i<Arr->lastIndex;i++){
-            Arr->ptr[i]=Arr->ptr[i+1];
+        if(index==Arr->lastIndex){
+            Arr->lastIndex--;
         }
-        Arr->lastIndex--;
+        else{
+            for(int i=index;i<Arr->lastIndex;i++){
+                Arr->ptr[i]=Arr->ptr[i+1];
+            }
+            Arr->lastIndex--;
+        }
+        if(((Arr->lastIndex)>=0)&&(countElement(Arr)<=Arr->capacity/2)){
+            halfArray(Arr);
+        }
     }
-
 }
-// method doubleArray() to increase the size of array by  double of its size.
-
-struct DynArray* doubleArray(struct DynArray* Arr){
-    struct DynArray* Array;
-    Array=(struct DynArray*)malloc(sizeof(struct DynArray));
-    Array->capacity=Arr->capacity*2;
-    Array->lastIndex=-1;
-    Array->ptr=(int*)malloc(sizeof(Array->capacity));
-    for(int i=0;i<=Arr->lastIndex;i++){
-        Array->lastIndex++;
-        Array->ptr[Array->lastIndex]=Arr->ptr[i];
-    }
-    free(Arr->ptr);
-    free(Arr);
-    return Array;
-}
-
-//method halfArray() to decrease the size of array by half
- 
- struct DynArray* halfArray(struct DynArray* Arr){
-    struct DynArray* Array;
-     Array=(struct DynArray*)malloc(sizeof(struct DynArray));
-    Array->capacity=Arr->capacity/2;
-    Array->lastIndex=-1;
-    Array->ptr=(int*)malloc(sizeof(Array->capacity));
-    for(int i=0;i<=Arr->lastIndex;i++){
-        Array->lastIndex++;
-        Array->ptr[Array->lastIndex]=Arr->ptr[i];
-    }
-    free(Arr->ptr);
-    free(Arr);
-    return Array;
- }
