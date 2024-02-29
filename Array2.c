@@ -187,3 +187,20 @@ struct DynArray* doubleArray(struct DynArray* Arr){
     free(Arr);
     return Array;
 }
+
+//method halfArray() to decrease the size of array by half
+ 
+ struct DynArray* halfArray(struct DynArray* Arr){
+    struct DynArray* Array;
+     Array=(struct DynArray*)malloc(sizeof(struct DynArray));
+    Array->capacity=Arr->capacity/2;
+    Array->lastIndex=-1;
+    Array->ptr=(int*)malloc(sizeof(Array->capacity));
+    for(int i=0;i<=Arr->lastIndex;i++){
+        Array->lastIndex++;
+        Array->ptr[Array->lastIndex]=Arr->ptr[i];
+    }
+    free(Arr->ptr);
+    free(Arr);
+    return Array;
+ }
